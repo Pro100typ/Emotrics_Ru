@@ -4,5 +4,5 @@ Backup/
 
 dist/
 build/
-include\measures\Ru
-include\measures\En
+include/measures/Ru
+include/measures/En
