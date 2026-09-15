@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 23 21:10:25 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 from PyQt5 import QtWidgets, QtCore, QtGui
 import numpy as np
 import ctypes
@@ -12,7 +5,6 @@ import os
 
 from utilities import find_circle_from_points
 
-# ------------------ Функция для безопасного пути ------------------
 def safe_path(path):
     if os.name != 'nt':
         return path
@@ -25,7 +17,6 @@ def safe_path(path):
     buffer = ctypes.create_unicode_buffer(buffer_size)
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
-# ----------------------------------------------------------------
 
 class ProcessEye(QtWidgets.QDialog):
     def __init__(self, image=None):

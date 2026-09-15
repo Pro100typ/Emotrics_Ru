@@ -1,16 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 17 13:37:34 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import numpy as np    
 from scipy.interpolate import UnivariateSpline
 
 def estimate_line(circle_left, circle_right):
-    # Функция для построения линии, соединяющей центры глаз,
-    # и перпендикулярной линии посередине
     x_1 = circle_right[0]
     y_1 = circle_right[1]
     x_2 = circle_left[0]

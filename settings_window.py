@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Sep 26 16:10:14 2017
-
-@author: GUARIND
-"""
-
 import os
 import sys
 from PyQt5 import QtWidgets
@@ -15,7 +8,6 @@ import ctypes
 
 from dlib import shape_predictor
 
-# ------------------ Функция для безопасного пути ------------------
 def safe_path(path):
     if os.name != 'nt':
         return path
@@ -28,7 +20,6 @@ def safe_path(path):
     buffer = ctypes.create_unicode_buffer(buffer_size)
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
-# ----------------------------------------------------------------
 
 QtWidgets.QFrame
 

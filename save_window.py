@@ -14,7 +14,6 @@ import cv2
 from utilities import save_txt_file, mark_picture, get_landmark_size, imread_unicode, imwrite_unicode
 from measurements import get_measurements_from_data
 
-# ------------------ safe_path ------------------
 def safe_path(path):
     if os.name != 'nt':
         return path
@@ -331,7 +330,7 @@ class SaveWindow(QDialog):
             error_occurred = True
         
         if error_occurred:
-            return  # не показываем успех, окно остаётся открытым
+            return
         
         QtWidgets.QMessageBox.information(self, 'Успех', f'Все выбранные файлы сохранены в папку:\n{target_folder}')
         self.accept()

@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 16 10:03:21 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import os
 import sys
 import ctypes
@@ -20,7 +13,6 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-# ------------------ Функция для безопасного пути ------------------
 def safe_path(path):
     if os.name != 'nt':
         return path
@@ -33,7 +25,6 @@ def safe_path(path):
     buffer = ctypes.create_unicode_buffer(buffer_size)
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
-# ----------------------------------------------------------------
 
 class ShowExample(QtWidgets.QMainWindow):
     def __init__(self):
@@ -46,7 +37,6 @@ class ShowExample(QtWidgets.QMainWindow):
         else:
             scriptDir = os.getcwd()
         
-        # Загружаем изображение через safe_path
         img_Qt = QtGui.QImage(safe_path(scriptDir + os.path.sep + 'include' + os.path.sep + 'icons' + os.path.sep + 'Facial-Nerve-Center.jpg'))
         pixmap = QtGui.QPixmap.fromImage(img_Qt)
         self._view_photo = ImageViewer()

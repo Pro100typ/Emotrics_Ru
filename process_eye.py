@@ -1,19 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Aug 15 16:59:44 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import cv2
 from eye_window import ProcessEye
 
 def get_iris_manual(Image, shape, position):
-    """
-    Функция для ручного выделения радужки.
-    Открывает окно, где пользователь выбирает 4 точки вокруг радужки.
-    Возвращает координаты центра и радиус.
-    """
     if position == 'left':
         # Левый глаз
         x_left = shape[42, 0]

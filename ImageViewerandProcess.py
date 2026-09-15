@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 16 10:53:19 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import cv2
 import numpy as np
 from scipy.spatial.distance import cdist
@@ -18,7 +11,6 @@ from PyQt5 import QtCore
 from utilities import mark_picture
 from process_eye import get_iris_manual
 
-# ------------------ Функция для безопасного пути ------------------
 def safe_path(path):
     if os.name != 'nt':
         return path
@@ -31,7 +23,6 @@ def safe_path(path):
     buffer = ctypes.create_unicode_buffer(buffer_size)
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
-# ----------------------------------------------------------------
 
 class ImageViewer(QtWidgets.QGraphicsView):
     def __init__(self):

@@ -1,17 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 14 22:12:59 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 14 22:12:59 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import os
 import numpy as np
 import cv2
@@ -21,9 +7,7 @@ import ctypes
 
 from measurements import get_measurements_from_data
 
-# ------------------ Функция для безопасного пути ------------------
 def safe_path(path):
-    """Преобразует путь в безопасную форму (короткий путь 8.3 на Windows)."""
     if os.name != 'nt':
         return path
     GetShortPathNameW = ctypes.windll.kernel32.GetShortPathNameW
@@ -36,7 +20,6 @@ def safe_path(path):
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
 
-# ---------- Unicode-совместимые функции чтения/записи изображений ----------
 def imread_unicode(path):
     """Читает изображение из пути с любыми символами (Unicode)."""
     try:
@@ -65,7 +48,6 @@ def imwrite_unicode(path, img):
             f.write(encoded.tobytes())
         return True
     return False
-# --------------------------------------------------------------------
 
 def shape_to_np(shape, dtype="int"):
     coords = np.zeros((68, 2), dtype=dtype)
@@ -74,8 +56,7 @@ def shape_to_np(shape, dtype="int"):
     return coords
 
 def get_info_from_txt(file):
-    # file может быть безопасным путём, но open сам обрабатывает Unicode,
-    # однако для надёжности используем safe_path при вызове
+    # file может быть безопасным путём, но open сам обрабатывает Unicode, однако для надёжности используем safe_path при вызове
     shape = np.zeros((68, 2), dtype=int)
     left_pupil = np.zeros((1, 3), dtype=int)
     right_pupil = np.zeros((1, 3), dtype=int)
@@ -90,7 +71,6 @@ def get_info_from_txt(file):
     get_boundingbox = 0
     cont_boundingbox = 0 
     
-    # Явно указываем кодировку UTF-8
     with open(file, 'r', encoding='utf-8') as f:
         for i, line in enumerate(f):    
             if i == 4:    
@@ -285,7 +265,6 @@ def save_txt_file(file_name, shape, circle_left, circle_right, boundingbox):
     if os.path.isfile(file_no_ext + '.txt'):
         os.remove(file_no_ext + '.txt')
     
-    # Запись с кодировкой UTF-8
     with open(file_no_ext + '.txt', 'a', encoding='utf-8') as f:
         f.write('# Имя файла { \n')
         f.write(photo_name)

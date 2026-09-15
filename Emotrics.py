@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Aug 12 18:41:24 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import os 
 import sys
 import cv2
@@ -40,17 +33,13 @@ from utilities import (estimate_lines, get_info_from_txt, mark_picture,
                        imread_unicode, imwrite_unicode)
 
 def resource_path(relative_path):
-    """Получить абсолютный путь к ресурсу, работает как в разработке, так и в собранном EXE."""
     try:
-        # PyInstaller создает временную папку и хранит путь к ней в _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-# ------------------ Функция для безопасного пути (короткий путь 8.3 в Windows) ------------------
 def safe_path(path):
-    """Преобразует путь в безопасную форму (короткий путь 8.3 на Windows)."""
     if os.name != 'nt':
         return path
     GetShortPathNameW = ctypes.windll.kernel32.GetShortPathNameW
@@ -62,7 +51,6 @@ def safe_path(path):
     buffer = ctypes.create_unicode_buffer(buffer_size)
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
-# ------------------------------------------------------------------------------------------------
 
 class window(QtWidgets.QWidget):
     
@@ -91,7 +79,6 @@ class window(QtWidgets.QWidget):
         
         self._Scale = 1
         
-        # Поток для обработки ориентиров
         self.thread_landmarks = QtCore.QThread()
         
         self.threadFirstPhoto = QtCore.QThread()
@@ -110,14 +97,12 @@ class window(QtWidgets.QWidget):
         else:
             scriptDir = os.getcwd()
         
-        # Заставка
         img_Qt = QtGui.QImage(resource_path(os.path.join('include', 'icon_color', 'background.jpg')))
         img_show = QtGui.QPixmap.fromImage(img_Qt)
         
         self.displayImage = ImageViewer()      
         self.displayImage.setPhoto(img_show) 
-        
-        # Панель инструментов
+
         loadAction = QtWidgets.QAction('Загрузить изображение', self)
         loadAction.setIcon(QtGui.QIcon(resource_path(os.path.join('include', 'icon_color', 'load_icon.png'))))
         loadAction.triggered.connect(self.load_file)
@@ -297,8 +282,7 @@ class window(QtWidgets.QWidget):
                 self._tab1_results._BH_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.BrowHeight))
                 self._tab1_results._DS_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.DentalShow))
                 self._tab1_results._PFH_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.PalpebralFissureHeight))
-                
-                # Для одного фото имя вкладки — имя файла без расширения
+
                 delimiter = os.path.sep
                 temp = self._file_name.split(delimiter)
                 photo_name = temp[-1]
@@ -323,8 +307,7 @@ class window(QtWidgets.QWidget):
                     self._Patient.SecondPhoto._righteye = self.displayImage._righteye
                     self._Patient.SecondPhoto._shape = self.displayImage._shape
                     self._Patient.SecondPhoto._points = self.displayImage._points
-                    
-                # Первое фото (ДО)
+
                 MeasurementsLeftFirst, MeasurementsRightFirst, MeasurementsDeviation, MeasurementsPercentual = get_measurements_from_data(
                     self._Patient.FirstPhoto._shape, self._Patient.FirstPhoto._lefteye, self._Patient.FirstPhoto._righteye,
                     self._CalibrationType, self._CalibrationValue)
@@ -361,8 +344,7 @@ class window(QtWidgets.QWidget):
                 self._tab1_results._BH_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.BrowHeight))
                 self._tab1_results._DS_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.DentalShow))
                 self._tab1_results._PFH_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.PalpebralFissureHeight))
-                
-                # Второе фото (ПОСЛЕ)
+
                 MeasurementsLeftSecond, MeasurementsRightSecond, MeasurementsDeviation, MeasurementsPercentual = get_measurements_from_data(
                     self._Patient.SecondPhoto._shape, self._Patient.SecondPhoto._lefteye, self._Patient.SecondPhoto._righteye,
                     self._CalibrationType, self._CalibrationValue)
@@ -399,8 +381,7 @@ class window(QtWidgets.QWidget):
                 self._tab2_results._BH_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.BrowHeight))
                 self._tab2_results._DS_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.DentalShow))
                 self._tab2_results._PFH_dev_p.setText('{0:.2f}'.format(MeasurementsPercentual.PalpebralFissureHeight))
-                
-                # Разница
+
                 self._tab3_results = CustomTabResult()
                 self._tab3_results._CE_right.setText('{0:.2f}'.format(-MeasurementsRightFirst.CommissureExcursion + MeasurementsRightSecond.CommissureExcursion))
                 self._tab3_results._SA_right.setText('{0:.2f}'.format(-MeasurementsRightFirst.SmileAngle + MeasurementsRightSecond.SmileAngle))
@@ -417,12 +398,10 @@ class window(QtWidgets.QWidget):
                 self._tab3_results._BH_left.setText('{0:.2f}'.format(-MeasurementsLeftFirst.BrowHeight + MeasurementsLeftSecond.BrowHeight))
                 self._tab3_results._PFH_left.setText('{0:.2f}'.format(-MeasurementsLeftFirst.PalpebralFissureHeight + MeasurementsLeftSecond.PalpebralFissureHeight))
 
-                # Задаём имена вкладок для двух фото
                 name1 = os.path.splitext(self._Patient.FirstPhoto._name)[0]
                 name2 = os.path.splitext(self._Patient.SecondPhoto._name)[0]
                 self._tab1_results._tab_name = name1
-                self._tab2_results._tab_name = name2
-                # третья вкладка "Разница" задаётся внутри ShowResults (третий параметр)
+                self._tab2_results._tab_name = name2)
                 
                 self._new_window = ShowResults(self._tab1_results, self._tab2_results, self._tab3_results)
                 self._new_window.show()
@@ -467,8 +446,7 @@ class window(QtWidgets.QWidget):
             self._file_name = name
             if self._new_window is not None:
                 self._new_window.close()
-            
-            # --- Исправление: безопасный путь и проверка ---
+
             safe_name = safe_path(name)
             self.displayImage._opencvimage = imread_unicode(name)
             if self.displayImage._opencvimage is None:
@@ -480,11 +458,9 @@ class window(QtWidgets.QWidget):
                     "- Файл повреждён\n- Путь содержит недопустимые символы\n"
                     "- Недостаточно прав доступа\n\n")
                 return
-            # ---------------------------------------------
 
             file_txt = name[:-4] + '.txt'
             if os.path.isfile(file_txt):
-                # Используем safe_path для чтения txt
                 shape, lefteye, righteye, boundingbox = get_info_from_txt(safe_path(file_txt))
                 self.displayImage._lefteye = lefteye
                 self.displayImage._righteye = righteye 
@@ -597,7 +573,6 @@ class window(QtWidgets.QWidget):
             )
             if not name:
                 return
-            # Создаём размеченное изображение
             temp_image = self.displayImage._opencvimage.copy()
             if self.displayImage._shape is not None:
                 temp_image = mark_picture(
@@ -608,7 +583,6 @@ class window(QtWidgets.QWidget):
                     self.displayImage._points,
                     self.displayImage._landmark_size
                 )
-            # Определяем формат по расширению файла
             ext = os.path.splitext(name)[1].lower()
             if ext == '.jpg':
                 encode_ext = '.jpg'
@@ -616,7 +590,6 @@ class window(QtWidgets.QWidget):
                 encode_ext = '.jpeg'
             else:
                 encode_ext = '.png'
-            # Сохраняем через imencode + open (поддержка русских символов)
             success, encoded = cv2.imencode(encode_ext, temp_image)
             if success:
                 with open(safe_path(name), 'wb') as f:
@@ -631,7 +604,6 @@ class window(QtWidgets.QWidget):
                     self.displayImage._shape, self.displayImage._lefteye, self.displayImage._righteye,
                     self._CalibrationType, self._CalibrationValue)
                 
-                # Открываем окно сохранения, передаём всё необходимое
                 temp = SaveWindow(
                     self,
                     file_name=self._file_name,
@@ -649,10 +621,8 @@ class window(QtWidgets.QWidget):
                 )
                 temp.exec_()
         else:  # пациент (две фотографии)
-            # Получаем пути к фото из объектов Patient
             first_path = self._Patient.FirstPhoto._file_name
             second_path = self._Patient.SecondPhoto._file_name
-            # Открываем диалог сохранения для пациента
             dlg = SavePatientWindow(
                 self,
                 patient=self._Patient,
@@ -819,7 +789,6 @@ class window(QtWidgets.QWidget):
             QtWidgets.QMessageBox.No
         )
         if reply == QtWidgets.QMessageBox.Yes:
-            # Закрываем окно с метриками, если открыто
             if self._new_window is not None:
                 self._new_window.close()
             event.accept()

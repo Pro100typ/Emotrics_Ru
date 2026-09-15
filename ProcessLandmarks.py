@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 27 18:17:25 2017
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from PyQt5 import QtWidgets, QtGui
 from dlib import get_frontal_face_detector, shape_predictor, rectangle
@@ -15,17 +9,13 @@ import ctypes
 import ctypes.wintypes
 
 def resource_path(relative_path):
-    """Получить абсолютный путь к ресурсу, работает как в разработке, так и в собранном EXE."""
     try:
-        # PyInstaller создает временную папку и хранит путь к ней в _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-# ------------------ Функция для получения короткого пути (8.3) в Windows ------------------
 def safe_path(path):
-    """Convert a long path to short (8.3) path on Windows, return original on other OS."""
     if os.name != 'nt':
         return path
     GetShortPathNameW = ctypes.windll.kernel32.GetShortPathNameW
@@ -38,7 +28,6 @@ def safe_path(path):
     GetShortPathNameW(path, buffer, buffer_size)
     return buffer.value
 
-# ------------------ Определение базовой директории для скомпилированного exe ------------------
 if getattr(sys, 'frozen', False):
     # Запуск из PyInstaller
     BASE_DIR = sys._MEIPASS
@@ -48,8 +37,6 @@ else:
         BASE_DIR = os.path.dirname(sys.argv[0])
     else:
         BASE_DIR = os.getcwd()
-
-# --------------------------------------------------------------------------------------------
 
 class GetLandmarks(QObject):
     
@@ -69,27 +56,23 @@ class GetLandmarks(QObject):
     def getlandmarks(self):
         detector = get_frontal_face_detector()
         
-        # ---- Формирование путей к файлам моделей с использованием безопасных имён ----
         if self._ModelName == 'iBUG':
             model_path = resource_path(os.path.join('include', 'data', 'shape_predictor_68_face_landmarks.dat'))
         elif self._ModelName == 'MEE':
             model_path = resource_path(os.path.join('include', 'data', 'mee_shape_predictor_68_face_landmarks.dat'))
         else:
             model_path = self._ModelName
-        
-        # Преобразуем в безопасный путь (короткий 8.3 для Windows)
+
         model_path_safe = safe_path(os.path.normpath(model_path))
         
         try:
             predictor = shape_predictor(model_path_safe)
         except Exception as e:
             print(f"Ошибка загрузки модели: {e}")
-            # Попробуем загрузить модель MEE как запасной вариант
             fallback_path = resource_path(os.path.join(BASE_DIR, 'include', 'data', 'mee_shape_predictor_68_face_landmarks.dat'))
             fallback_safe = safe_path(fallback_path)
             predictor = shape_predictor(fallback_safe)
             print("Используется резервная модель MEE")
-        # -------------------------------------------------------------------------
         
         image = self._image.copy()
         height, width, d = image.shape
@@ -136,7 +119,6 @@ class GetLandmarks(QObject):
             self.finished.emit()
     
     def get_iris(self):
-        # ---- Левое ухо (глаз) ----
         x_left = self._shape[42, 0]
         w_left = (self._shape[45, 0] - x_left)
         y_left = min(self._shape[43, 1], self._shape[44, 1])
@@ -149,7 +131,6 @@ class GetLandmarks(QObject):
         selected_circle_left[2] = int(selected_circle_left[2])
         self._lefteye = selected_circle_left
         
-        # ---- Правое ухо (глаз) ----
         x_right = self._shape[36, 0]
         w_right = (self._shape[39, 0] - x_right)
         y_right = min(self._shape[37, 1], self._shape[38, 1])

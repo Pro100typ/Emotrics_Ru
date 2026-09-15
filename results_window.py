@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 14 15:42:31 2017
-
-@author: Diego L.Guarin -- diego_guarin at meei.harvard.edu
-"""
-
 import os
 import sys
 import ctypes
@@ -14,16 +7,12 @@ from PyQt5 import QtCore
 
 from example_window import ShowExample
 
-# ------------------ Функция для безопасного пути (портативность) ------------------
 def resource_path(relative_path):
-    """Получить абсолютный путь к ресурсу, работает как в разработке, так и в собранном EXE."""
     try:
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
-
-# ----------------------------------------------------------------
 
 class CustomTabResult(QtWidgets.QWidget):
     def __init__(self):
@@ -145,7 +134,6 @@ class CustomTabResult(QtWidgets.QWidget):
         self._LVH_dev_p = QtWidgets.QLineEdit(self)
         self._LVH_dev_p.setText("-")
         
-        # --- Кнопки помощи с иконками (исправленные пути) ---
         # Вспомогательная функция для загрузки иконки вопроса
         def question_icon():
             return QtGui.QIcon(resource_path(os.path.join('include', 'icon_color', 'question_icon.png')))
