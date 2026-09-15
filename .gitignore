@@ -1,20 +1,7 @@
-dist/ 
-build/ 
-dist/include/  
-
-
-# Виртуальное окружение
-emotrics_env/
-
-# Файлы Python
 __pycache__/
-*.py[cod]
-*$py.class
+emotrics_env/
+Backup/
 
-# Локальные файлы конфигурации
-*.local
-
-# Файлы, создаваемые IDE (например, VS Code, PyCharm)
-.vscode/
-.idea/
-*.iml
+dist/
+build/
+include/
